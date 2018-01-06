@@ -2,7 +2,7 @@ package com.morrisje;
 
 import java.util.ArrayList;
 
-public class Team {
+public class Team<T extends Player> implements Comparable<Team<T>>{
     private String teamName;
     int played = 0;
     int won = 0;
@@ -10,7 +10,7 @@ public class Team {
     int tied = 0;
 
 
-    private ArrayList<Player> members = new ArrayList<>();
+    private ArrayList<T> members = new ArrayList<>();
 
     public Team(String teamName) {
         this.teamName = teamName;
@@ -20,9 +20,9 @@ public class Team {
         return teamName;
     }
 
-    public boolean addPlayer(Player player) {
+    public boolean addPlayer(T player) {
         if(members.contains(player)) {
-            System.out.println(player + " is already on the team");
+            System.out.println(player.getName() + " is already on the team");
             return false;
         } else {
             members.add(player);
@@ -34,7 +34,8 @@ public class Team {
         return this.members.size();
     }
 
-    public void matchResult(Team opponent, int ourScore, int theirScore){
+    public void matchResult(Team<T> opponent, int ourScore, int theirScore){
+        String message;
         if (ourScore > theirScore) {
             won++;
         } else if (ourScore == theirScore) {
@@ -50,5 +51,17 @@ public class Team {
 
     public int ranking() {
         return (won * 2) + tied;
+    }
+
+    @Override
+    public int compareTo(Team<T> team) {
+        if(this.ranking() > team.ranking()) {
+            return -1;
+        } else if (this.ranking() < team.ranking()) {
+            return 1;
+        } else {
+            return 0;
+        }
+
     }
 }
